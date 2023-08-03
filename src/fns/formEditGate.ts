@@ -53,7 +53,7 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
         .setName('Advanced Options')
         .setClass('open-gate--form-field')
         .addToggle((text) =>
-            text.setValue(false).onChange(async (value) => {
+            text.setValue(true).onChange(async (value) => {
                 if (value) {
                     advancedOptions.addClass('open-gate--advanced-options--show')
                 } else {
@@ -63,7 +63,7 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
         )
 
     const advancedOptions = contentEl.createDiv({
-        cls: 'open-gate--advanced-options'
+        cls: 'open-gate--advanced-options open-gate--advanced-options--show'
     })
 
     new Setting(advancedOptions)
@@ -77,19 +77,9 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
         )
 
     new Setting(advancedOptions)
-        .setName('User Agent')
-        .setClass('open-gate--form-field--column')
-        .setDesc('Leave it blank if you are not sure')
-        .addTextArea((text) =>
-            text.setValue(gateOptions.userAgent ?? '').onChange(async (value) => {
-                gateOptions.userAgent = value
-            })
-        )
-
-    new Setting(advancedOptions)
         .setName('CSS')
-        .setClass('open-gate--form-field--column')
-        .setDesc('Leave it blank if you are not sure')
+        .setClass('open-gate--form-field--column-big')
+        .setDesc('Edit this shit')
         .addTextArea((text) =>
             text.setValue(gateOptions.css ?? '').onChange(async (value) => {
                 gateOptions.css = value

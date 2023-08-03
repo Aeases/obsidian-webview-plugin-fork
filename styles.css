@@ -38,8 +38,13 @@
 }
 
 .open-gate--form-field--column .setting-item-control textarea{
-    min-height: 80px;
+    min-height: 20px;
 }
+.open-gate--form-field--column-big .setting-item-control textarea{
+    min-height: 200px;
+    width: 100%;
+}
+
 
 .open-gate--form-field--column {
     display: flex;

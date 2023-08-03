@@ -25,13 +25,8 @@ export class SettingTab extends PluginSettingTab {
         if (Platform.isMobileApp) {
             containerEl
                 .createEl('div', {
-                    text: 'On mobile, some websites may not work. it is a limitation of Obsidian Mobile. Please use Obsidian Desktop instead. Follow me on Twitter to get the latest updates about the issue: ',
+                    text: 'On mobile, some websites may not work.',
                     cls: 'open-gate-mobile-warning'
-                })
-                .createEl('a', {
-                    text: '@duocdev',
-                    cls: 'open-gate-mobile-link',
-                    href: 'https://twitter.com/duocdev'
                 })
         }
 
@@ -83,28 +78,18 @@ export class SettingTab extends PluginSettingTab {
             attr: {
                 style: 'display: block; margin-bottom: 5px'
             },
-            text: 'When delete or edit a gate, you need to reload Obsidian to see the changes.'
+            text: 'When you delete or edit a gate, Obsidian must be reloaded to see the changes.'
         })
 
         containerEl.createEl('small', {
             attr: {
                 style: 'display: block; margin-bottom: 1em;'
             },
-            text: `To reload Obsidian, you can use the menu "view -> Force reload" or "Reload App" in the command palette.`
+            text: `To reload Obsidian, you can go; "view -> Force reload" or "Reload App" in the command palette.`
         })
 
         new Setting(containerEl)
-            .setName('Follow me on Twitter')
+            .setName('Follow the original project author on Twitter!')
             .setDesc('@duocdev')
-            .addButton((button) => {
-                button.setCta()
-                button.setButtonText('Follow for update').onClick(() => {
-                    window.open('https://twitter.com/duocdev')
-                })
-            })
-            .addButton((button) => {
-                button.buttonEl.outerHTML =
-                    "<a href='https://paypal.me/duocnguyen' target='_blank'><img style='border:0px;height:35px;' src='https://cdn.ko-fi.com/cdn/kofi3.png?v=3' /></a>"
-            })
     }
 }

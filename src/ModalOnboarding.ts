@@ -16,12 +16,12 @@ export class ModalOnBoarding extends Modal {
 
     onOpen() {
         const { contentEl } = this
-        contentEl.createEl('h3', { text: 'Welcome to OpenGate' })
+        contentEl.createEl('h3', { text: 'Welcome to Webviews' })
         contentEl.createEl('p', {
-            text: 'OpenGate is a plugin that allows you to embed any website in Obsidian. You will never have to leave Obsidian again!'
+            text: 'Webviews is awesome'
         })
         contentEl.createEl('p', {
-            text: 'But now you have to create your first gate.'
+            text: 'But now you have to create your first view.'
         })
 
         formEditGate(contentEl, this.gateOptions, (result) => {
