@@ -5,7 +5,7 @@ on:
         tags:
             - '*'
 env:
-    PLUGIN_NAME: obsidian-open-gate
+    PLUGIN_NAME: obsidian-webviews
 jobs:
     build:
         runs-on: ubuntu-latest
