@@ -39,6 +39,9 @@ export class GateView extends ItemView {
         return this.frame! instanceof HTMLIFrameElement
     }
 
+    
+
+
     onload(): void {
         super.onload()
         this.addActions()
