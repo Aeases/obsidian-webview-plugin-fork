@@ -42,22 +42,53 @@
 }
 .open-gate--form-field--column-big .setting-item-control textarea{
     min-height: 200px;
-    width: 100vw;
-    padding-top: 10px;
+    width: 100%;
+    min-width: 100%;
+    max-width: 105%;
+    padding-top: 5px;
+    margin-top: 20px;
+    margin: 5px;
+    margin-bottom: 0px;
 }
 
-.open-gate--form-field--column-big>.setting-item-info> *:first-child {
+.open-gate--form-field--column-big>.setting-item-info {
     display: none;
+    padding-top: 20px;
 }
 
-.wv-setting-spacer {
-    border-radius: 6px;
-    border-color: red;
-    border: 1px;
-    padding: 5px;
-    margin-top: 4px;
+.wv-setting-notice {
+    border: 0.5px dashed var(--color-red);
+    border-radius: var(--input-radius);
+    padding: 4px;
+    margin-top: 2px;
+    margin: 3px;
+    margin-bottom: 5px;
+    color: var(--text-muted)
 }
 
+.open-gate--form-field--column-icon .setting-item-control > textarea {
+      min-width: 100%;
+      min-height: 75px;
+      transition-timing-function: ease-in-out;
+      transition-duration: 0.5s;
+  }
+
+  .open-gate--form-field--column-icon .setting-item-control > textarea:focus {
+    flex: 1;
+    border-top-color: hotpink;
+    border-bottom-color: pink;
+    border-top-width: 10px;
+    border-bottom-width: 5px;
+    background-blend-mode: darken;
+    opacity: 0.75;
+}
+
+.open-gate--form-field--column-icon .setting-item-info {
+    min-width: 30%;
+    width: 50px;
+    flex: 0;
+    border-color: var(--color-pink);
+}
 
 .open-gate--form-field--column {
     display: flex;
