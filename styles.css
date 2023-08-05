@@ -42,7 +42,20 @@
 }
 .open-gate--form-field--column-big .setting-item-control textarea{
     min-height: 200px;
-    width: 100%;
+    width: 100vw;
+    padding-top: 10px;
+}
+
+.open-gate--form-field--column-big>.setting-item-info> *:first-child {
+    display: none;
+}
+
+.wv-setting-spacer {
+    border-radius: 6px;
+    border-color: red;
+    border: 1px;
+    padding: 5px;
+    margin-top: 4px;
 }
 
 
