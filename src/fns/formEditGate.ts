@@ -3,6 +3,9 @@ import { getSvgIcon } from './getSvgIcon'
 import { normalizeGateOption } from './normalizeGateOption'
 
 export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOption, onSubmit: (result: GateFrameOption) => void) => {
+
+
+
     new Setting(contentEl)
         .setName('URL')
         .setClass('open-gate--form-field')
@@ -49,13 +52,35 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
                 })
         )
     
-    new Setting(contentEl)
-        .setName('CSS')
+        contentEl.createDiv({
+            cls: "wv-settings-title",
+            text: "CSS"
+        })
+        contentEl.createDiv({
+            cls: "setting-item-description",
+            text: "You can pass-through the current theme's css variables by adding a '-obsidian' prefix to the variable name, e.g. --background-primary-obsidian"
+        })
+
+        const CSSSettingDivContainer = contentEl.createDiv()
+    new Setting(CSSSettingDivContainer)
         .setClass('open-gate--form-field--column-big')
-        .setDesc("You can use the current theme's colours by adding a -obsidian prefix to the variable name, e.g. --background-primary-obsidian \n NOTE: only works for select variables")
         .addTextArea((text) =>
             text.setValue(gateOptions.css ?? '').onChange(async (value) => {
                 gateOptions.css = value
+        })
+    )
+    contentEl.createDiv({
+        cls: "wv-setting-notice",
+        text: "\n NOTE: CSS variable pass-through into the webview only works for some variables, it also requires a refresh after theme change, see README.md on github for details."
+    })
+
+    new Setting(contentEl)
+    .setName('Icon')
+    .setClass('open-gate--form-field--column-icon')
+    .setDesc('Leave it blank to enable auto-detect')
+    .addTextArea((text) =>
+        text.setValue(gateOptions.icon).onChange(async (value) => {
+            gateOptions.icon = value
         })
     )
 
@@ -63,7 +88,7 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
         .setName('Advanced Options')
         .setClass('open-gate--form-field')
         .addToggle((text) =>
-            text.setValue(true).onChange(async (value) => {
+            text.setValue(false).onChange(async (value) => {
                 if (value) {
                     advancedOptions.addClass('open-gate--advanced-options--show')
                 } else {
@@ -73,18 +98,10 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
         )
 
     const advancedOptions = contentEl.createDiv({
-        cls: 'open-gate--advanced-options open-gate--advanced-options--show'
+        cls: 'open-gate--advanced-options open-gate--advanced-options'
     })
 
-    new Setting(advancedOptions)
-        .setName('Icon')
-        .setClass('open-gate--form-field--column')
-        .setDesc('Leave it blank to enable auto-detect')
-        .addTextArea((text) =>
-            text.setValue(gateOptions.icon).onChange(async (value) => {
-                gateOptions.icon = value
-            })
-        )
+
 
 
     new Setting(advancedOptions)

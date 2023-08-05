@@ -35,8 +35,7 @@
               }
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -172,7 +171,7 @@
       "web-views:google": false
     }
   },
-  "active": "61ff3971626c1839",
+  "active": "4c87fe62db758eb4",
   "lastOpenFiles": [
     "Untitled.md"
   ]

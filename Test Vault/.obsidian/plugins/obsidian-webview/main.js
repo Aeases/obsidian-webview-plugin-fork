@@ -2876,13 +2876,29 @@ var formEditGate = (contentEl, gateOptions, onSubmit) => {
       gateOptions.position = value;
     });
   });
-  new import_obsidian.Setting(contentEl).setName("CSS").setClass("open-gate--form-field--column-big").setDesc("You can use the current theme's colours by adding a -obsidian prefix to the variable name, e.g. --background-primary-obsidian \n NOTE: only works for select variables").addTextArea((text) => {
+  contentEl.createDiv({
+    cls: "wv-settings-title",
+    text: "CSS"
+  });
+  contentEl.createDiv({
+    cls: "setting-item-description",
+    text: "You can pass-through the current theme's css variables by adding a '-obsidian' prefix to the variable name, e.g. --background-primary-obsidian"
+  });
+  const CSSSettingDivContainer = contentEl.createDiv();
+  new import_obsidian.Setting(CSSSettingDivContainer).setClass("open-gate--form-field--column-big").addTextArea((text) => {
     var _a;
     return text.setValue((_a = gateOptions.css) != null ? _a : "").onChange(async (value) => {
       gateOptions.css = value;
     });
   });
-  new import_obsidian.Setting(contentEl).setName("Advanced Options").setClass("open-gate--form-field").addToggle((text) => text.setValue(true).onChange(async (value) => {
+  contentEl.createDiv({
+    cls: "wv-setting-notice",
+    text: "\n NOTE: CSS variable pass-through into the webview only works for some variables, it also requires a refresh after theme change, see README.md on github for details."
+  });
+  new import_obsidian.Setting(contentEl).setName("Icon").setClass("open-gate--form-field--column-icon").setDesc("Leave it blank to enable auto-detect").addTextArea((text) => text.setValue(gateOptions.icon).onChange(async (value) => {
+    gateOptions.icon = value;
+  }));
+  new import_obsidian.Setting(contentEl).setName("Advanced Options").setClass("open-gate--form-field").addToggle((text) => text.setValue(false).onChange(async (value) => {
     if (value) {
       advancedOptions.addClass("open-gate--advanced-options--show");
     } else {
@@ -2890,11 +2906,8 @@ var formEditGate = (contentEl, gateOptions, onSubmit) => {
     }
   }));
   const advancedOptions = contentEl.createDiv({
-    cls: "open-gate--advanced-options open-gate--advanced-options--show"
+    cls: "open-gate--advanced-options open-gate--advanced-options"
   });
-  new import_obsidian.Setting(advancedOptions).setName("Icon").setClass("open-gate--form-field--column").setDesc("Leave it blank to enable auto-detect").addTextArea((text) => text.setValue(gateOptions.icon).onChange(async (value) => {
-    gateOptions.icon = value;
-  }));
   new import_obsidian.Setting(advancedOptions).setName("Profile Key").setClass("open-gate--form-field").setDesc("It's like profiles in Chrome, gates with the same profile can share storage").addText((text) => {
     var _a;
     return text.setValue((_a = gateOptions.profileKey) != null ? _a : "").onChange(async (value) => {
