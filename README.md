@@ -10,21 +10,13 @@ This is based on [Obsidian OpenGate](https://github.com/nguyenvanduocit/obsidian
 | --background-primary   | --background-primary-obsidian   |
 | --background-secondary | --background-secondary-obsidian |
 
-## Features
-
--   Embed any website in your Obsidian
--   Auto generate icon
--   Embed any site that can not be embedded by iframe: Google Translate
--   Support for mobile
--   Custom CSS
-
 ## Usage
 
-1.  just type `New gate` in command palette
-1.  type the url and title of the site you want to embed
-1.  click `Create`
+1.  Type `New gate` into the command palette
+2.  type the url and title of the site you want to embed
+3.  click `Create`
 
-Then you will the the icon of then website in the left sidebar.
+You can access the webviews from the left sidebar
 
 
 ### Options
@@ -45,7 +37,7 @@ Add new gate does not require to restart Obsidian. But editing and deleting gate
 
 You can use code
 
-You can use code block to embed any website.
+You can use a code block to embed any website.
 
 ~~~markdown
 ```gate  
