@@ -48,6 +48,16 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
                     gateOptions.position = value as GateFrameOptionType
                 })
         )
+    
+    new Setting(contentEl)
+        .setName('CSS')
+        .setClass('open-gate--form-field--column-big')
+        .setDesc("You can use the current theme's colours by adding a -obsidian prefix to the variable name, e.g. --background-primary-obsidian \n NOTE: only works for select variables")
+        .addTextArea((text) =>
+            text.setValue(gateOptions.css ?? '').onChange(async (value) => {
+                gateOptions.css = value
+        })
+    )
 
     new Setting(contentEl)
         .setName('Advanced Options')
@@ -76,15 +86,6 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
             })
         )
 
-    new Setting(advancedOptions)
-        .setName('CSS')
-        .setClass('open-gate--form-field--column-big')
-        .setDesc('Edit this shit')
-        .addTextArea((text) =>
-            text.setValue(gateOptions.css ?? '').onChange(async (value) => {
-                gateOptions.css = value
-            })
-        )
 
     new Setting(advancedOptions)
         .setName('Profile Key')

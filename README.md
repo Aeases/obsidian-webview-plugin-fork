@@ -1,9 +1,14 @@
-![](./stuff/img.png)
-![](./stuff/img_3.png)
 
-# Obsidian Open Gate
+# Obsidian Webviews
 
-This plugin allows you to embedding any website to Obsidian, you have anything you need in one place. You can browse website and take notes at the same time. e.g. Ask ChatGPT and copy the answer directly to your note.
+This plugin allows you to embed any website into obsidian, ontop of that, you can use (some) obsidian theme variables in your css snippets too like `background-primary-obsidian`
+This is based on [Obsidian OpenGate](https://github.com/nguyenvanduocit/obsidian-open-gate)
+
+#### Currently supported obsidian variables (can add more just by adding stuff to the arry in getCurrentCSSvalues.ts)
+| Original Name          | Snippet Name                    |
+| ---------------------- | ------------------------------- |
+| --background-primary   | --background-primary-obsidian   |
+| --background-secondary | --background-secondary-obsidian |
 
 ## Features
 
