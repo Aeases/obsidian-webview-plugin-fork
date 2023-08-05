@@ -1,0 +1,12 @@
+{
+	"id": "web-views",
+	"name": "Obsidian Webviews",
+	"version": "1.0",
+	"minAppVersion": "1.3",
+	"description": "Obsidian Webviews, fork of Open Gate",
+	"author": "duocnv, aeases",
+	"authorUrl": "https://twitter.com/duocdev, https://mas.to/aeases",
+	"fundingUrl": {
+		"Buy Me a Coffee": "https://paypal.me/duocnguyen"
+	}
+}

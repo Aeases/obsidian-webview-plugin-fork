@@ -1,7 +1,8 @@
-import { ItemView, WorkspaceLeaf, Menu } from 'obsidian'
+import { ItemView, WorkspaceLeaf, Menu, WorkspaceItem, WorkspaceContainer, App } from 'obsidian'
 import { createWebviewTag } from './fns/createWebviewTag'
 import { Platform } from 'obsidian'
 import { createIframe } from './fns/createIframe'
+import { getObsidianCssVars } from './fns/getCurrentCSSvalues'
 const { parse } = require('css-parse');
 import WebviewTag = Electron.WebviewTag
 export class GateView extends ItemView {
@@ -77,6 +78,16 @@ export class GateView extends ItemView {
 
                 if (this.options?.css) {
                     let ParsedCSS = this.options?.css // its not parsed yet. i cbf rn
+                    //let styles = this.app.workspace.containerEl.getCssPropertyValue("--background-primary")
+                    let styles = getObsidianCssVars(this.app)
+                    //let cssvalue = getComputedStyle(styles)
+                    console.log(ParsedCSS)
+                    console.log(styles)
+                    //console.log(ParsedCSS)
+                    for (let style of styles) {
+                        await frame.insertCSS(style)
+                    }
+
                     await frame.insertCSS(ParsedCSS)
                 }
             })
