@@ -1,4 +1,4 @@
-import { Notice, Platform, Plugin } from 'obsidian'
+import { ButtonComponent, Notice, Platform, Plugin, Scope, WorkspaceWindow } from 'obsidian'
 import { SettingTab } from './SetingTab'
 import { registerGate } from './fns/registerGate'
 import { ModalEditGate } from './ModalEditGate'
@@ -10,6 +10,11 @@ import { ModalListGates } from './ModalListGates'
 import { registerCodeBlockProcessor } from './fns/registerCodeBlockProcessor'
 import { registerLinkProcessor } from './fns/registerLinkProcessor'
 import { examplePlugin } from './MCPlugin'
+import { fragWithHTML } from './fns/fragwithhtml'
+import { BrowserWindow } from 'electron/main'
+import { webContents } from 'electron'
+import { GateView } from './GateView'
+const window = require('electron').BrowserWindow;
 
 interface PluginSetting {
     uuid: string
@@ -22,7 +27,7 @@ const DEFAULT_SETTINGS: PluginSetting = {
 }
 
 const defaultGateOption: Partial<GateFrameOption> = {
-    profileKey: 'open-gate',
+    profileKey: 'webview-data',
     zoomFactor: 1
 }
 
@@ -101,9 +106,14 @@ export default class OpenGatePlugin extends Plugin {
         if (!this.settings.gates.hasOwnProperty(gate.id)) {
             registerGate(this, gate)
         } else {
-            new Notice(
-                'This change will take effect after you reload Obsidian.'
+            let ReloadNotice = new Notice(
+                fragWithHTML("Refresh your view, or Obsidian to see changes.")
             )
+            new ButtonComponent(ReloadNotice.noticeEl)
+            .onClick((e) => {
+                e.win.activeWindow.close()
+            }).setIcon("alert-triangle").setButtonText("Close Obsidian")
+            .setWarning()
         }
 
         if (gate.profileKey === '' || gate.profileKey === undefined) {
@@ -129,7 +139,7 @@ export default class OpenGatePlugin extends Plugin {
         await unloadView(this.app.workspace, gate)
         delete this.settings.gates[gateId]
         await this.saveSettings()
-        new Notice('This change will take effect after you reload Obsidian.')
+        new Notice(fragWithHTML("Reload your view, or Obsidian to see changes."))
     }
 
     async loadSettings() {

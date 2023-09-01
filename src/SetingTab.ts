@@ -2,6 +2,7 @@ import { App, PluginSettingTab, Setting, Platform } from 'obsidian'
 import OpenGatePlugin from './main'
 import { ModalEditGate } from './ModalEditGate'
 import { createEmptyGateOption } from './fns/createEmptyGateOption'
+import { fragWithHTML } from './fns/fragwithhtml'
 
 export class SettingTab extends PluginSettingTab {
     plugin: OpenGatePlugin
@@ -30,15 +31,7 @@ export class SettingTab extends PluginSettingTab {
                 })
         }
 
-        containerEl
-            .createEl('button', { text: 'New gate', cls: 'mod-cta' })
-            .addEventListener('click', () => {
-                new ModalEditGate(
-                    this.app,
-                    createEmptyGateOption(),
-                    this.updateGate.bind(this)
-                ).open()
-            })
+
 
         containerEl.createEl('hr')
 
@@ -71,6 +64,16 @@ export class SettingTab extends PluginSettingTab {
                     })
                 })
         }
+        
+        settingContainerEl
+        .createEl('button', { text: 'New gate', cls: 'mod-cta wv-mod-cta-new-view' })
+        .addEventListener('click', () => {
+            new ModalEditGate(
+                this.app,
+                createEmptyGateOption(),
+                this.updateGate.bind(this)
+            ).open()
+        })
 
         containerEl.createEl('h3', { text: 'Help' })
 
@@ -78,7 +81,7 @@ export class SettingTab extends PluginSettingTab {
             attr: {
                 style: 'display: block; margin-bottom: 5px'
             },
-            text: 'When you delete or edit a gate, Obsidian must be reloaded to see the changes.'
+            text: 'When you delete or edit a webview, Your webview, and in some cases Obsidian, must be reloaded to see the changes.'
         })
 
         containerEl.createEl('small', {
@@ -89,7 +92,9 @@ export class SettingTab extends PluginSettingTab {
         })
 
         new Setting(containerEl)
-            .setName('Follow the original project author on Twitter!')
-            .setDesc('@duocdev')
+            .setName(fragWithHTML('Obsidian Webviews is based on <a href="https://github.com/nguyenvanduocit/obsidian-open-gate">Obsidian Opengate</a>'))
+            .setDesc(fragWithHTML(`Follow the original author of Open-gate on Twitter <a class="mod-cta"
+            href="https://twitter.com/intent/follow?screen_name=duocdev">
+          @duocdev</a>`))
     }
 }

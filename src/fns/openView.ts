@@ -3,13 +3,14 @@ import { Workspace, WorkspaceLeaf } from 'obsidian'
 export const openView = async (
     workspace: Workspace,
     id: string,
-    position?: GateFrameOptionType
+    position?: GateFrameOptionType,
+    allowMultiple?: boolean
 ): Promise<void> => {
     let leaf: WorkspaceLeaf
     let leafs = workspace.getLeavesOfType(id)
-    if (leafs.length > 0) {
-        workspace.revealLeaf(leafs[0])
-        return
+    if (leafs.length > 0 && allowMultiple == false)  {
+            workspace.revealLeaf(leafs[0])
+            return
     }
 
     leaf = await createView(workspace, id, position)

@@ -6,10 +6,12 @@ export const createEmptyGateOption = (): GateFrameOption => {
         title: '',
         icon: '',
         hasRibbon: true,
-        position: 'right',
-        profileKey: 'open-gate',
+        position: 'center',
+        profileKey: 'webview-data',
         url: '',
         zoomFactor: 1.0,
-        userAgent: getDefaultUserAgent()
+        allowMultiple: false,
+        userAgent: getDefaultUserAgent(),
+        restrictKeys: false
     }
 }

@@ -1,10 +1,11 @@
 import { Setting } from 'obsidian'
 import { getSvgIcon } from './getSvgIcon'
 import { normalizeGateOption } from './normalizeGateOption'
+import { fragWithHTML } from './fragwithhtml'
 
 export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOption, onSubmit: (result: GateFrameOption) => void) => {
 
-
+  //  ""
 
     new Setting(contentEl)
         .setName('URL')
@@ -77,7 +78,7 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
     new Setting(contentEl)
     .setName('Icon')
     .setClass('open-gate--form-field--column-icon')
-    .setDesc('Leave it blank to enable auto-detect')
+    .setDesc(fragWithHTML('<u><b>Default</u></b>: Webview Icon will match the website it points to. <br/> <u><b>Other</u></b>: Define an icon from <a href="https://lucide.dev">lucide.dev</a>, or a SVG'))
     .addTextArea((text) =>
         text.setValue(gateOptions.icon).onChange(async (value) => {
             gateOptions.icon = value
@@ -104,17 +105,25 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
 
 
 
-    new Setting(advancedOptions)
-        .setName('Profile Key')
-        .setClass('open-gate--form-field')
-        .setDesc("It's like profiles in Chrome, gates with the same profile can share storage")
-        .addText((text) =>
-            text.setValue(gateOptions.profileKey ?? '').onChange(async (value) => {
-                if (value === '') {
-                    value = 'open-gate'
-                }
 
-                gateOptions.profileKey = value
+
+    new Setting(advancedOptions)
+        .setName('Allow Multiple Instances')
+        .setClass('open-gate--form-field')
+        .setDesc(fragWithHTML("<u><b>Default</u></b>: Attempting to open a view will only create a new view if no view already exists. <br/> <u><b>Enabled</u></b>: Opening a view will create a brand new view everytime."))
+        .addToggle((text) =>
+            text.setValue(gateOptions.allowMultiple === true).onChange(async (value) => {
+                gateOptions.allowMultiple = value
+            })
+        )
+
+        new Setting(advancedOptions)
+        .setName('Restrict Key-presses to webview')
+        .setClass('open-gate--form-field')
+        .setDesc(fragWithHTML("<u><b>Default</u></b>: Both Obsidian & your Webview will react to keypresses <br/> <u><b>Disabled:</u></b>: Key-presses made inside your webview will be ignored by obsidian."))
+        .addToggle((text) =>
+            text.setValue(gateOptions.restrictKeys === true).onChange(async (value) => {
+                gateOptions.restrictKeys = value
             })
         )
 
@@ -128,6 +137,21 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
                 gateOptions.zoomFactor = parseFloat(value)
             })
         )
+
+
+    new Setting(advancedOptions)
+    .setName('Profile Key')
+    .setClass('open-gate--form-field')
+    .setDesc("Any webviews that share the same key will share browser data. (e.g. Logins, Cookies etc.)")
+    .addText((text) =>
+        text.setValue(gateOptions.profileKey ?? '').onChange(async (value) => {
+            if (value === '') {
+                value = 'webview-data'
+            }
+
+            gateOptions.profileKey = value
+        })
+    )
 
     new Setting(contentEl).addButton((btn) =>
         btn

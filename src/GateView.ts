@@ -3,11 +3,13 @@ import { createWebviewTag } from './fns/createWebviewTag'
 import { Platform } from 'obsidian'
 import { createIframe } from './fns/createIframe'
 import { getObsidianCssVars } from './fns/getCurrentCSSvalues'
+// @ts-ignore
+import { clipboard, remote } from "electron";
 const { parse } = require('css-parse');
 import WebviewTag = Electron.WebviewTag
 export class GateView extends ItemView {
     private readonly options: GateFrameOption
-    private frame: WebviewTag | HTMLIFrameElement
+    public frame: WebviewTag | HTMLIFrameElement
     private readonly useIframe: boolean = false
 
     constructor(leaf: WorkspaceLeaf, options: GateFrameOption) {
@@ -71,6 +73,8 @@ export class GateView extends ItemView {
             this.frame.addEventListener('dom-ready', async () => {
                 // typescript indicates type
                 const frame = this.frame as unknown as WebviewTag
+                // @ts-ignore
+                const webContents = remote.webContents.fromId(this.frame.getWebContentsId());
                 await frame.executeJavaScript(`
                 document.addEventListener('click', (e) => {
                     if (e.target instanceof HTMLAnchorElement && e.target.target === '_blank') {
@@ -78,7 +82,27 @@ export class GateView extends ItemView {
                         console.log('open-gate-open:'+e.target.href);
                     }
                 });`)
-
+                if (this.options?.restrictKeys == false) {
+                    // Pass-through key-presses to obsidian
+                    // Courtesy of the Surfing Plugin: https://github.dev/PKM-er/Obsidian-Surfing/tree/main/src
+                    webContents.on('before-input-event', (event: any, input: any) => {
+                        if (input.type !== 'keyDown') {
+                            return;
+                        }
+    
+                        const emulatedKeyboardEvent = new KeyboardEvent('keydown', {
+                            code: input.code,
+                            key: input.key,
+                            shiftKey: input.shift,
+                            altKey: input.alt,
+                            ctrlKey: input.control,
+                            metaKey: input.meta,
+                            repeat: input.isAutoRepeat
+                        });
+    
+                        activeDocument.body.dispatchEvent(emulatedKeyboardEvent);
+                    })
+                }
                 if (this.options?.css) {
                     let ParsedCSS = this.options?.css // its not parsed yet. i cbf rn
                     //let styles = this.app.workspace.containerEl.getCssPropertyValue("--background-primary")
