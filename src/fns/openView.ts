@@ -4,11 +4,11 @@ export const openView = async (
     workspace: Workspace,
     id: string,
     position?: GateFrameOptionType,
-    allowMultiple?: boolean
+    restrictToSingleWebview?: boolean
 ): Promise<void> => {
     let leaf: WorkspaceLeaf
     let leafs = workspace.getLeavesOfType(id)
-    if (leafs.length > 0 && allowMultiple == false)  {
+    if (leafs.length > 0 &&  restrictToSingleWebview == true)  {
             workspace.revealLeaf(leafs[0])
             return
     }

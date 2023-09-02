@@ -13,6 +13,6 @@ declare type GateFrameOption = {
     userAgent?: string
     zoomFactor?: number
     css?: string
-    allowMultiple?: boolean
+    restrictToSingleWebview?: boolean
     restrictKeys?: boolean
 }

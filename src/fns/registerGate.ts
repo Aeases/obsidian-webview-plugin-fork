@@ -16,7 +16,7 @@ export const registerGate = (plugin: Plugin, options: GateFrameOption) => {
 
     if (options.hasRibbon) {
         plugin.addRibbonIcon(iconName, options.title, async (evt: MouseEvent) =>
-            openView(plugin.app.workspace, options.id, options.position, options.allowMultiple)
+            openView(plugin.app.workspace, options.id, options.position, options.restrictToSingleWebview)
         )
     }
 
@@ -24,6 +24,6 @@ export const registerGate = (plugin: Plugin, options: GateFrameOption) => {
         id: `open-gate-${btoa(options.url)}`,
         name: `Open gate ${options.title}`,
         callback: async () =>
-            await openView(plugin.app.workspace, options.id, options.position, options.allowMultiple)
+            await openView(plugin.app.workspace, options.id, options.position, options.restrictToSingleWebview)
     })
 }

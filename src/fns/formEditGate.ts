@@ -2,6 +2,7 @@ import { Setting } from 'obsidian'
 import { getSvgIcon } from './getSvgIcon'
 import { normalizeGateOption } from './normalizeGateOption'
 import { fragWithHTML } from './fragwithhtml'
+import { URLPresets } from './cssSuggest'
 
 export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOption, onSubmit: (result: GateFrameOption) => void) => {
 
@@ -10,14 +11,15 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
     new Setting(contentEl)
         .setName('URL')
         .setClass('open-gate--form-field')
-        .addText((text) =>
+        .addText((text) => {
             text
                 .setPlaceholder('https://example.com')
                 .setValue(gateOptions.url)
                 .onChange(async (value) => {
                     gateOptions.url = value
-                })
-        )
+                });
+            new URLPresets(app, text.inputEl)
+        })
 
     new Setting(contentEl)
         .setName('Name')
@@ -31,7 +33,7 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
     new Setting(contentEl)
         .setName('Pin to menu')
         .setClass('open-gate--form-field')
-        .setDesc('If enabled, the gate will be pinned to the left bar')
+        .setDesc(fragWithHTML('When <b><u>enabled</u></b>, the icon for your view will be pinned to the <u>left menu</u>'))
         .addToggle((text) =>
             text.setValue(gateOptions.hasRibbon === true).onChange(async (value) => {
                 gateOptions.hasRibbon = value
@@ -41,39 +43,29 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
     new Setting(contentEl)
         .setName('Position')
         .setClass('open-gate--form-field')
-        .setDesc('What banner do you want to show?')
+        .setDesc('Where should the webview pop-up when you open it?')
         .addDropdown((text) =>
             text
-                .addOption('left', 'Left')
-                .addOption('right', 'Right')
-                .addOption('center', 'Center')
+                .addOption('left', 'Left Sidebar')
+                .addOption('right', 'Right Sidebar')
+                .addOption('center', 'Current Workspace Tab')
                 .setValue(gateOptions.position ?? 'right')
                 .onChange(async (value) => {
                     gateOptions.position = value as GateFrameOptionType
                 })
         )
-    
-        contentEl.createDiv({
-            cls: "wv-settings-title",
-            text: "CSS"
-        })
-        contentEl.createDiv({
-            cls: "setting-item-description",
-            text: "You can pass-through the current theme's css variables by adding a '-obsidian' prefix to the variable name, e.g. --background-primary-obsidian"
-        })
 
-        const CSSSettingDivContainer = contentEl.createDiv()
-    new Setting(CSSSettingDivContainer)
-        .setClass('open-gate--form-field--column-big')
-        .addTextArea((text) =>
-            text.setValue(gateOptions.css ?? '').onChange(async (value) => {
-                gateOptions.css = value
-        })
-    )
-    contentEl.createDiv({
-        cls: "wv-setting-notice",
-        text: "\n NOTE: CSS variable pass-through into the webview only works for some variables, it also requires a refresh after theme change, see README.md on github for details."
-    })
+    new Setting(contentEl)
+        .setName('Single Webview Only')
+        .setClass('open-gate--form-field')
+        .setDesc(fragWithHTML("<u><b>Default</u></b>: Opening a webview will focus it rather than creating a new one. <br/> <u><b>Disabled</u></b>: Opening a webview will create a brand new view everytime."))
+        .addToggle((text) =>
+            text.setValue(gateOptions.restrictToSingleWebview === true).onChange(async (value) => {
+                gateOptions.restrictToSingleWebview = value
+            })
+        )
+
+
 
     new Setting(contentEl)
     .setName('Icon')
@@ -103,29 +95,27 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
     })
 
 
+        advancedOptions.createDiv({
+            cls: "wv-settings-title",
+            text: "CSS"
+        })
+        advancedOptions.createDiv({
+            cls: "setting-item-description",
+            text: "You can pass-through the current theme's css variables by adding a '-obsidian' prefix to the variable name, e.g. --background-primary-obsidian"
+        })
 
-
-
-
-    new Setting(advancedOptions)
-        .setName('Allow Multiple Instances')
-        .setClass('open-gate--form-field')
-        .setDesc(fragWithHTML("<u><b>Default</u></b>: Attempting to open a view will only create a new view if no view already exists. <br/> <u><b>Enabled</u></b>: Opening a view will create a brand new view everytime."))
-        .addToggle((text) =>
-            text.setValue(gateOptions.allowMultiple === true).onChange(async (value) => {
-                gateOptions.allowMultiple = value
-            })
-        )
-
-        new Setting(advancedOptions)
-        .setName('Restrict Key-presses to webview')
-        .setClass('open-gate--form-field')
-        .setDesc(fragWithHTML("<u><b>Default</u></b>: Both Obsidian & your Webview will react to keypresses <br/> <u><b>Disabled:</u></b>: Key-presses made inside your webview will be ignored by obsidian."))
-        .addToggle((text) =>
-            text.setValue(gateOptions.restrictKeys === true).onChange(async (value) => {
-                gateOptions.restrictKeys = value
-            })
-        )
+        const CSSSettingDivContainer = advancedOptions.createDiv()
+    new Setting(CSSSettingDivContainer)
+        .setClass('open-gate--form-field--column-big')
+        .addTextArea((text) =>
+            text.setValue(gateOptions.css ?? '').onChange(async (value) => {
+                gateOptions.css = value
+        })
+    )
+    advancedOptions.createDiv({
+        cls: "wv-setting-notice",
+        text: fragWithHTML(`NOTE: CSS variable pass-through into the webview only works for some variables. <br> A refresh/reload of the view is needed after theme, or light/dark mode change, see <a href="https://github.com/Aeases/obsidian-webviews">README.md</a> on github for details.`)
+    })
 
     //zoomFactor
     new Setting(advancedOptions)
@@ -155,11 +145,25 @@ export const formEditGate = (contentEl: HTMLElement, gateOptions: GateFrameOptio
 
     new Setting(contentEl).addButton((btn) =>
         btn
-            .setButtonText(gateOptions.id ? 'Update the gate' : 'Create new gate')
+            .setButtonText(gateOptions.id ? 'Update Webview' : 'Create new Webview')
             .setCta()
             .onClick(async () => {
                 gateOptions = normalizeGateOption(gateOptions)
                 onSubmit(gateOptions)
             })
     )
+
+    const RestrictKeysSetting = new Setting(advancedOptions)
+    .setName('Restrict Key-presses to webview')
+    .setClass('open-gate--form-field')
+    .setDesc(fragWithHTML("<u><b>Default</u></b>: Both Obsidian & your Webview will react to keypresses <br/> <u><b>Disabled:</u></b>: Key-presses made inside your webview will be ignored by obsidian."))
+    .addToggle((text) =>
+        text.setValue(gateOptions.restrictKeys === true).onChange(async (value) => {
+            gateOptions.restrictKeys = value
+        })
+    )
+    advancedOptions.createDiv({
+        cls: "wv-setting-notice",
+        text: fragWithHTML(`NOTE: This will only restrict keys once you have <b><u>clicked</u></b> <b>inside</b> the webview. and will not impact already open webviews.`)
+    })
 }

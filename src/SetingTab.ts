@@ -47,12 +47,12 @@ export class SettingTab extends PluginSettingTab {
 
             new Setting(gateEl)
                 .setName(gate.title)
-                .setDesc(gate.url)
+                .setDesc(fragWithHTML(`${gate.url}`))
                 .addButton((button) => {
                     button.setButtonText('Delete').onClick(async () => {
                         await this.plugin.removeGate(gateId)
                         gateEl.remove()
-                    })
+                    }).setWarning()
                 })
                 .addButton((button) => {
                     button.setButtonText('Edit').onClick(() => {
@@ -66,7 +66,7 @@ export class SettingTab extends PluginSettingTab {
         }
         
         settingContainerEl
-        .createEl('button', { text: 'New gate', cls: 'mod-cta wv-mod-cta-new-view' })
+        .createEl('button', { text: 'New Webview', cls: 'mod-cta wv-mod-cta-new-view' })
         .addEventListener('click', () => {
             new ModalEditGate(
                 this.app,
@@ -75,23 +75,27 @@ export class SettingTab extends PluginSettingTab {
             ).open()
         })
 
-        containerEl.createEl('h3', { text: 'Help' })
+//        containerEl.createEl('h3', { text: 'Help' })
 
-        containerEl.createEl('small', {
-            attr: {
-                style: 'display: block; margin-bottom: 5px'
-            },
-            text: 'When you delete or edit a webview, Your webview, and in some cases Obsidian, must be reloaded to see the changes.'
+//        containerEl.createEl('small', {
+//            attr: {
+//                style: 'display: block; margin-bottom: 5px'
+//            },
+//            text: 'When you delete or edit a webview, Your webview, and in some cases Obsidian, must be reloaded to see the changes.'
+//        })
+//
+//        containerEl.createEl('small', {
+//            attr: {
+//                style: 'display: block; margin-bottom: 1em;'
+//            },
+//            text: `To reload Obsidian, you can go; "view -> Force reload" or "Reload App" in the command palette.`
+//        })
+
+        const FooterDiv = settingContainerEl.createDiv({
+            cls: 'wv-footer-settings'
         })
 
-        containerEl.createEl('small', {
-            attr: {
-                style: 'display: block; margin-bottom: 1em;'
-            },
-            text: `To reload Obsidian, you can go; "view -> Force reload" or "Reload App" in the command palette.`
-        })
-
-        new Setting(containerEl)
+        new Setting(FooterDiv)
             .setName(fragWithHTML('Obsidian Webviews is based on <a href="https://github.com/nguyenvanduocit/obsidian-open-gate">Obsidian Opengate</a>'))
             .setDesc(fragWithHTML(`Follow the original author of Open-gate on Twitter <a class="mod-cta"
             href="https://twitter.com/intent/follow?screen_name=duocdev">

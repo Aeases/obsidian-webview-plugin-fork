@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-webviews",
 	"name": "Obsidian Webviews",
-	"version": "1.3",
+	"version": "1.4",
 	"minAppVersion": "1.3",
-	"description": "Obsidian Webviews, fork of Open Gate",
-	"author": "duocnv, aeases",
+	"description": "Integrate any website straight into Obsidian! (Fork of Open Gate)",
+	"author": "aeases, duocnv",
 	"authorUrl": "https://twitter.com/duocdev, https://mas.to/aeases"
 }

@@ -67,27 +67,15 @@
 }
 
 .open-gate--form-field--column-icon .setting-item-control > textarea {
-      min-width: 100%;
+      min-width: 50%;
       min-height: 75px;
-      transition-timing-function: ease-in-out;
+      transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
       transition-duration: 0.5s;
-  }
-
-  .open-gate--form-field--column-icon .setting-item-control > textarea:focus {
-    flex: 1;
-    border-top-color: hotpink;
-    border-bottom-color: pink;
-    border-top-width: 10px;
-    border-bottom-width: 5px;
-    background-blend-mode: darken;
-    opacity: 0.75;
 }
 
 .open-gate--form-field--column-icon .setting-item-info {
-    min-width: 30%;
-    width: 50px;
+    min-width: 50%;
     flex: 0;
-    border-color: var(--color-pink);
 }
 
 .open-gate--form-field--column {
@@ -129,4 +117,32 @@ div[data-gate-id] .setting-item-name {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.wv-mod-cta-new-view {
+    float: right;
+    width: 40%;
+}
+
+.wv-twitter-follow-button {
+    background-color: #50ceff;
+}
+
+.wv-footer-settings {
+    width: 100%;
+    display: flex;
+    padding-top: 5%;
+    margin-top: 1rem;
+}
+
+.wv-suggestion-settings-info {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    white-space: inherit;
+}
+
+.suggestion-item {
+    white-space: inherit !important;
 }

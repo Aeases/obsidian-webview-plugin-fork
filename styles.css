@@ -121,8 +121,28 @@ div[data-gate-id] .setting-item-name {
 
 .wv-mod-cta-new-view {
     float: right;
+    width: 40%;
 }
 
 .wv-twitter-follow-button {
     background-color: #50ceff;
+}
+
+.wv-footer-settings {
+    width: 100%;
+    display: flex;
+    padding-top: 5%;
+    margin-top: 1rem;
+}
+
+.wv-suggestion-settings-info {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    white-space: inherit;
+}
+
+.suggestion-item {
+    white-space: inherit !important;
 }

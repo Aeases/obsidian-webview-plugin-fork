@@ -10,7 +10,7 @@ export const createEmptyGateOption = (): GateFrameOption => {
         profileKey: 'webview-data',
         url: '',
         zoomFactor: 1.0,
-        allowMultiple: false,
+        restrictToSingleWebview: true,
         userAgent: getDefaultUserAgent(),
         restrictKeys: false
     }
