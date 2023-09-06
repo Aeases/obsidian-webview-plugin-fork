@@ -65,15 +65,6 @@ export class SettingTab extends PluginSettingTab {
                 })
         }
         
-        settingContainerEl
-        .createEl('button', { text: 'New Webview', cls: 'mod-cta wv-mod-cta-new-view' })
-        .addEventListener('click', () => {
-            new ModalEditGate(
-                this.app,
-                createEmptyGateOption(),
-                this.updateGate.bind(this)
-            ).open()
-        })
 
 //        containerEl.createEl('h3', { text: 'Help' })
 
@@ -100,5 +91,16 @@ export class SettingTab extends PluginSettingTab {
             .setDesc(fragWithHTML(`Follow the original author of Open-gate on Twitter <a class="mod-cta"
             href="https://twitter.com/intent/follow?screen_name=duocdev">
           @duocdev</a>`))
+
+          FooterDiv
+          .createEl('button', { text: 'New Webview', cls: 'mod-cta wv-mod-cta-new-view' })
+          .addEventListener('click', () => {
+              new ModalEditGate(
+                  this.app,
+                  createEmptyGateOption(),
+                  this.updateGate.bind(this)
+              ).open()
+          })
+  
     }
 }

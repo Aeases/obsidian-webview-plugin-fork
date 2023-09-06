@@ -7,17 +7,24 @@ import { getObsidianCssVars } from './fns/getCurrentCSSvalues'
 import { clipboard, remote } from "electron";
 const { parse } = require('css-parse');
 import WebviewTag = Electron.WebviewTag
+import { ModalEditGate } from './ModalEditGate'
+import { SettingTab } from './SetingTab'
 export class GateView extends ItemView {
     private readonly options: GateFrameOption
     public frame: WebviewTag | HTMLIFrameElement
     private readonly useIframe: boolean = false
+    public InjectedCSS: string
+    //plugin: OpenGatePlugin
+    //shouldNotify: boolean
 
     constructor(leaf: WorkspaceLeaf, options: GateFrameOption) {
         super(leaf)
-        this.navigation = false
+        this.navigation = true
         this.options = options
         this.useIframe = Platform.isMobileApp
     }
+
+    
 
     addActions(): void {
         this.addAction('refresh-ccw', 'Reload', () => {
@@ -104,18 +111,16 @@ export class GateView extends ItemView {
                     })
                 }
                 if (this.options?.css) {
-                    let ParsedCSS = this.options?.css // its not parsed yet. i cbf rn
-                    //let styles = this.app.workspace.containerEl.getCssPropertyValue("--background-primary")
+                    let ParsedCSS = this.options?.css
                     let styles = getObsidianCssVars(this.app)
-                    //let cssvalue = getComputedStyle(styles)
-                    console.log(ParsedCSS)
-                    console.log(styles)
-                    //console.log(ParsedCSS)
                     for (let style of styles) {
                         await frame.insertCSS(style)
                     }
-
+                    // TODO: Find a more elegant way of combining styles, preferably insert one string that I can then store in the GateView's class, then when the time comes to swap out the CSS, like at a theme change or CSS edit I can just remove inserted CSS with the saved string, and then insert in new css, and overwrite that string with the new one.
                     await frame.insertCSS(ParsedCSS)
+                    
+                    
+                    this.InjectedCSS = ParsedCSS
                 }
             })
         }
@@ -156,6 +161,19 @@ export class GateView extends ItemView {
                 }
             })
         })
+
+        //menu.addItem((item) => {
+        //    item.setTitle('Edit Webview')
+        //    item.setIcon('list')
+        //    item.onClick(() => {
+        //        new ModalEditGate(
+        //            this.app,
+        //            this.options,
+        //            async() => await this.plugin.addGate(this.options)
+        //        ).open()
+        //    })
+        //})
+
         menu.addItem((item) => {
             item.setTitle('Toggle DevTools')
             item.setIcon('file-cog')

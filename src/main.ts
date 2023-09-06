@@ -105,15 +105,52 @@ export default class OpenGatePlugin extends Plugin {
     async addGate(gate: GateFrameOption) {
         if (!this.settings.gates.hasOwnProperty(gate.id)) {
             registerGate(this, gate)
+            console.log("Registering New Gate")
         } else {
             let ReloadNotice = new Notice(
-                fragWithHTML("Refresh your view, or Obsidian to see changes.")
+                fragWithHTML(`Refreshing All Instances of ${gate.title}...`), 0
             )
-            new ButtonComponent(ReloadNotice.noticeEl)
-            .onClick((e) => {
-                e.win.activeWindow.close()
-            }).setIcon("alert-triangle").setButtonText("Close Obsidian")
-            .setWarning()
+            new ButtonComponent(ReloadNotice.noticeEl).onClick(async(e) => {
+                // @ts-ignore
+                await this.app.plugins.disablePlugin("obsidian-webviews");
+                // @ts-ignore
+                await this.app.plugins.enablePlugin("obsidian-webviews");
+            }).setIcon("refresh-cw")
+
+
+            let LeavesThatAreGates = this.app.workspace.getLeavesOfType(gate.id)
+            if (LeavesThatAreGates.length == 0) {
+                ReloadNotice.setMessage("You may have to restart Obsidian to apply some changes. ( e.g. Webview Icon )")
+                new ButtonComponent(ReloadNotice.noticeEl)
+                .onClick((e) => {
+                    e.win.activeWindow.close()
+                }).setIcon("alert-triangle").setButtonText("Close Obsidian").setWarning()
+            }
+            LeavesThatAreGates.forEach(async (e) => {
+                // @ts-ignore
+                let Leaves: WebviewTag | HTMLIFrameElement = e.view.frame
+                // @ts-ignore
+                let LeavesCSS: string = e.view.options.css
+                let NoticeMercyDuration = 800
+                console.log(e)
+                try {
+/*                     if (LeavesCSS == gate.css) {
+                        await Leaves.removeInsertedCSS(LeavesCSS)
+                        await Leaves.insertCSS(gate.css)
+                        // @ts-ignore
+                        LeavesCSS.InjectedCSS = gate.css
+                        NoticeMercyDuration = 3850
+                    } */
+                    // @ts-ignore
+                    Leaves.reload()
+                    setTimeout(() => ReloadNotice.hide(), NoticeMercyDuration)
+                } catch (error) {
+                    console.error(`[Obsidian Webviews] ${error} \n\n Please click Refresh Icon in the top-right notice`)
+                }
+            })
+
+
+        
         }
 
         if (gate.profileKey === '' || gate.profileKey === undefined) {
@@ -139,7 +176,8 @@ export default class OpenGatePlugin extends Plugin {
         await unloadView(this.app.workspace, gate)
         delete this.settings.gates[gateId]
         await this.saveSettings()
-        new Notice(fragWithHTML("Reload your view, or Obsidian to see changes."))
+        let DeleteNotice = new Notice(fragWithHTML(`Deleted ${gate.title}`), 1500)
+        //new ButtonComponent(DeleteNotice.noticeEl).onClick(() => registerGate(this, gate)).setButtonText("Restore Gate").setCta()
     }
 
     async loadSettings() {

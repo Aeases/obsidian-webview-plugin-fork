@@ -16,7 +16,7 @@ export class ModalEditGate extends Modal {
 
     onOpen() {
         const { contentEl } = this
-        contentEl.createEl('h3', { text: 'Create a Webview' })
+        contentEl.createEl('h3', { text: `${this.gateOptions.title ? `${this.gateOptions.title}` : `Create a Webview!` }` })
         formEditGate(contentEl, this.gateOptions, (result) => {
             this.onSubmit(result)
             this.close()

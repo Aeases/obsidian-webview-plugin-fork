@@ -4748,7 +4748,7 @@ var formEditGate = (contentEl, gateOptions, onSubmit) => {
       gateOptions.position = value;
     });
   });
-  new import_obsidian2.Setting(contentEl).setName("Single Webview Only").setClass("open-gate--form-field").setDesc(fragWithHTML("<u><b>Default</u></b>: Attempting to open a view will only create a new view if no view already exists. <br/> <u><b>Disabled</u></b>: Opening a view will create a brand new view everytime.")).addToggle((text) => text.setValue(gateOptions.restrictToSingleWebview === true).onChange(async (value) => {
+  new import_obsidian2.Setting(contentEl).setName("Single Webview Only").setClass("open-gate--form-field").setDesc(fragWithHTML("<u><b>Default</u></b>: Opening a webview will focus it rather than creating a new one. <br/> <u><b>Disabled</u></b>: Opening a webview will create a brand new view everytime.")).addToggle((text) => text.setValue(gateOptions.restrictToSingleWebview === true).onChange(async (value) => {
     gateOptions.restrictToSingleWebview = value;
   }));
   new import_obsidian2.Setting(contentEl).setName("Icon").setClass("open-gate--form-field--column-icon").setDesc(fragWithHTML('<u><b>Default</u></b>: Webview Icon will match the website it points to. <br/> <u><b>Other</u></b>: Define an icon from <a href="https://lucide.dev">lucide.dev</a>, or a SVG')).addTextArea((text) => text.setValue(gateOptions.icon).onChange(async (value) => {
@@ -4820,7 +4820,7 @@ var ModalEditGate = class extends import_obsidian3.Modal {
   }
   onOpen() {
     const { contentEl } = this;
-    contentEl.createEl("h3", { text: "Create a Webview" });
+    contentEl.createEl("h3", { text: `${this.gateOptions.title ? `${this.gateOptions.title}` : `Create a Webview!`}` });
     formEditGate(contentEl, this.gateOptions, (result) => {
       this.onSubmit(result);
       this.close();
@@ -4894,15 +4894,15 @@ var SettingTab = class extends import_obsidian4.PluginSettingTab {
         });
       });
     }
-    settingContainerEl.createEl("button", { text: "New Webview", cls: "mod-cta wv-mod-cta-new-view" }).addEventListener("click", () => {
-      new ModalEditGate(this.app, createEmptyGateOption(), this.updateGate.bind(this)).open();
-    });
     const FooterDiv = settingContainerEl.createDiv({
       cls: "wv-footer-settings"
     });
     new import_obsidian4.Setting(FooterDiv).setName(fragWithHTML('Obsidian Webviews is based on <a href="https://github.com/nguyenvanduocit/obsidian-open-gate">Obsidian Opengate</a>')).setDesc(fragWithHTML(`Follow the original author of Open-gate on Twitter <a class="mod-cta"
             href="https://twitter.com/intent/follow?screen_name=duocdev">
           @duocdev</a>`));
+    FooterDiv.createEl("button", { text: "New Webview", cls: "mod-cta wv-mod-cta-new-view" }).addEventListener("click", () => {
+      new ModalEditGate(this.app, createEmptyGateOption(), this.updateGate.bind(this)).open();
+    });
   }
 };
 
@@ -4972,7 +4972,7 @@ var GateView = class extends import_obsidian5.ItemView {
   constructor(leaf, options) {
     super(leaf);
     this.useIframe = false;
-    this.navigation = false;
+    this.navigation = true;
     this.options = options;
     this.useIframe = import_obsidian6.Platform.isMobileApp;
   }
@@ -5047,12 +5047,11 @@ var GateView = class extends import_obsidian5.ItemView {
         if ((_b = this.options) == null ? void 0 : _b.css) {
           let ParsedCSS = (_c = this.options) == null ? void 0 : _c.css;
           let styles = getObsidianCssVars(this.app);
-          console.log(ParsedCSS);
-          console.log(styles);
           for (let style of styles) {
             await frame.insertCSS(style);
           }
           await frame.insertCSS(ParsedCSS);
+          this.InjectedCSS = ParsedCSS;
         }
       });
     }
@@ -5393,11 +5392,34 @@ var OpenGatePlugin = class extends import_obsidian12.Plugin {
   async addGate(gate) {
     if (!this.settings.gates.hasOwnProperty(gate.id)) {
       registerGate(this, gate);
+      console.log("Registering New Gate");
     } else {
-      let ReloadNotice = new import_obsidian12.Notice(fragWithHTML("Refresh your view, or Obsidian to see changes."));
-      new import_obsidian12.ButtonComponent(ReloadNotice.noticeEl).onClick((e) => {
-        e.win.activeWindow.close();
-      }).setIcon("alert-triangle").setButtonText("Close Obsidian").setWarning();
+      let ReloadNotice = new import_obsidian12.Notice(fragWithHTML(`Refreshing All Instances of ${gate.title}...`), 0);
+      new import_obsidian12.ButtonComponent(ReloadNotice.noticeEl).onClick(async (e) => {
+        await this.app.plugins.disablePlugin("obsidian-webviews");
+        await this.app.plugins.enablePlugin("obsidian-webviews");
+      }).setIcon("refresh-cw");
+      let LeavesThatAreGates = this.app.workspace.getLeavesOfType(gate.id);
+      if (LeavesThatAreGates.length == 0) {
+        ReloadNotice.setMessage("You may have to restart Obsidian to apply some changes. ( e.g. Webview Icon )");
+        new import_obsidian12.ButtonComponent(ReloadNotice.noticeEl).onClick((e) => {
+          e.win.activeWindow.close();
+        }).setIcon("alert-triangle").setButtonText("Close Obsidian").setWarning();
+      }
+      LeavesThatAreGates.forEach(async (e) => {
+        let Leaves = e.view.frame;
+        let LeavesCSS = e.view.options.css;
+        let NoticeMercyDuration = 800;
+        console.log(e);
+        try {
+          Leaves.reload();
+          setTimeout(() => ReloadNotice.hide(), NoticeMercyDuration);
+        } catch (error) {
+          console.error(`[Obsidian Webviews] ${error} 
+
+ Please click Refresh Icon in the top-right notice`);
+        }
+      });
     }
     if (gate.profileKey === "" || gate.profileKey === void 0) {
       gate.profileKey = defaultGateOption.profileKey;
@@ -5416,7 +5438,7 @@ var OpenGatePlugin = class extends import_obsidian12.Plugin {
     await unloadView(this.app.workspace, gate);
     delete this.settings.gates[gateId];
     await this.saveSettings();
-    new import_obsidian12.Notice(fragWithHTML("Reload your view, or Obsidian to see changes."));
+    let DeleteNotice = new import_obsidian12.Notice(fragWithHTML(`Deleted ${gate.title}`), 1500);
   }
   async loadSettings() {
     this.settings = await this.loadData();
