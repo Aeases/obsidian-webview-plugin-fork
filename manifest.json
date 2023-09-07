@@ -1,6 +1,6 @@
 {
-	"id": "obsidian-webviews",
-	"name": "Obsidian Webviews",
+	"id": "webviews",
+	"name": "Webviews",
 	"version": "1.4.3",
 	"minAppVersion": "1.3",
 	"description": "Integrate any website straight into Obsidian! (Fork of Open Gate)",
