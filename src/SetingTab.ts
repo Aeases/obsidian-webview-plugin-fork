@@ -1,14 +1,14 @@
 import { App, PluginSettingTab, Setting, Platform } from 'obsidian'
-import OpenGatePlugin from './main'
+import ObsidianWebviewsPlugin from './main'
 import { ModalEditGate } from './ModalEditGate'
 import { createEmptyGateOption } from './fns/createEmptyGateOption'
 import { fragWithHTML } from './fns/fragwithhtml'
 
 export class SettingTab extends PluginSettingTab {
-    plugin: OpenGatePlugin
+    plugin: ObsidianWebviewsPlugin
     shouldNotify: boolean
 
-    constructor(app: App, plugin: OpenGatePlugin) {
+    constructor(app: App, plugin: ObsidianWebviewsPlugin) {
         super(app, plugin)
         this.plugin = plugin
     }

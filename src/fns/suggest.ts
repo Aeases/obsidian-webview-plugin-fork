@@ -16,7 +16,7 @@ export class Suggest<T> {
     containerEl.on("click", ".suggestion-item", this.onSuggestionClick.bind(this));
     containerEl.on(
       "mousemove",
-      ".suggestion-item .wv-suggestion-item-URL",
+      ".suggestion-item",
       this.onSuggestionMouseover.bind(this)
     );
 

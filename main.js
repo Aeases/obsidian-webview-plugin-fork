@@ -2815,7 +2815,7 @@ var require_css_parse = __commonJS({
 // src/main.ts
 var main_exports = {};
 __export(main_exports, {
-  default: () => OpenGatePlugin
+  default: () => ObsidianWebviewsPlugin
 });
 module.exports = __toCommonJS(main_exports);
 var import_obsidian12 = require("obsidian");
@@ -2837,24 +2837,25 @@ var getSvgIcon = (siteUrl) => {
 
 // src/fns/normalizeGateOption.ts
 var normalizeGateOption = (gate) => {
+  const MatchHTTPSandHTTP = new RegExp("^(http|https)://");
+  if (MatchHTTPSandHTTP.test(gate.url) == false) {
+    gate.url = `https://${gate.url}`;
+  }
   if (gate.id === "") {
     let seedString = gate.url;
-    if (gate.profileKey !== "open-gate" && gate.profileKey !== "") {
+    if (gate.profileKey !== "webview-data" && gate.profileKey !== "") {
       seedString += gate.profileKey;
     }
     gate.id = btoa(seedString);
   }
   if (gate.profileKey === "" || gate.profileKey === void 0) {
-    gate.profileKey = "open-gate";
+    gate.profileKey = "webview-data";
   }
   if (gate.zoomFactor === 0 || gate.zoomFactor === void 0) {
     gate.zoomFactor = 1;
   }
   if (gate.icon === "") {
     gate.icon = getSvgIcon(gate.url);
-  }
-  if (gate.title === "") {
-    gate.title = gate.url;
   }
   return gate;
 };
@@ -4304,7 +4305,7 @@ var Suggest = class {
     this.owner = owner;
     this.containerEl = containerEl;
     containerEl.on("click", ".suggestion-item", this.onSuggestionClick.bind(this));
-    containerEl.on("mousemove", ".suggestion-item .wv-suggestion-item-URL", this.onSuggestionMouseover.bind(this));
+    containerEl.on("mousemove", ".suggestion-item", this.onSuggestionMouseover.bind(this));
     scope.register([], "ArrowUp", (event) => {
       if (!event.isComposing) {
         this.setSelectedItem(this.selectedItem - 1, true);
@@ -5168,8 +5169,8 @@ var registerGate = (plugin, options) => {
     plugin.addRibbonIcon(iconName, options.title, async (evt) => openView(plugin.app.workspace, options.id, options.position, options.restrictToSingleWebview));
   }
   plugin.addCommand({
-    id: `open-gate-${btoa(options.url)}`,
-    name: `Open gate ${options.title}`,
+    id: `webviews-${btoa(options.url)}`,
+    name: `Open ${options.title}`,
     callback: async () => await openView(plugin.app.workspace, options.id, options.position, options.restrictToSingleWebview)
   });
 };
@@ -5293,7 +5294,7 @@ var registerLinkProcessor = (plugin) => {
       }
       let frame;
       const options = {
-        profileKey: altArr ? (_c = altArr[1]) == null ? void 0 : _c.replace("profile:", "") : "open-gate",
+        profileKey: altArr ? (_c = altArr[1]) == null ? void 0 : _c.replace("profile:", "") : "webview-data",
         url: src,
         userAgent: altArr ? (_d = altArr[2]) == null ? void 0 : _d.replace("useragent:", "") : getDefaultUserAgent(),
         zoomFactor: altArr ? parseFloat((_f = (_e = altArr[3]) == null ? void 0 : _e.replace("zoom:", "")) != null ? _f : "1") : 1
@@ -5341,7 +5342,7 @@ var defaultGateOption = {
   profileKey: "webview-data",
   zoomFactor: 1
 };
-var OpenGatePlugin = class extends import_obsidian12.Plugin {
+var ObsidianWebviewsPlugin = class extends import_obsidian12.Plugin {
   async onload() {
     await this.loadSettings();
     await this.initFrames();

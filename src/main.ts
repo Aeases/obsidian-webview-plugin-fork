@@ -31,7 +31,7 @@ const defaultGateOption: Partial<GateFrameOption> = {
     zoomFactor: 1
 }
 
-export default class OpenGatePlugin extends Plugin {
+export default class ObsidianWebviewsPlugin extends Plugin {
     settings: PluginSetting
 
     async onload() {

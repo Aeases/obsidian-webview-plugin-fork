@@ -27,7 +27,7 @@ export const registerLinkProcessor = (plugin: Plugin) => {
 
             let frame: HTMLIFrameElement | WebviewTag
             const options = {
-                profileKey: altArr ? altArr[1]?.replace('profile:', '') : 'open-gate',
+                profileKey: altArr ? altArr[1]?.replace('profile:', '') : 'webview-data',
                 url: src,
                 userAgent: altArr ? altArr[2]?.replace('useragent:', '') : getDefaultUserAgent(),
                 zoomFactor: altArr ? parseFloat(altArr[3]?.replace('zoom:', '') ?? '1') : 1
